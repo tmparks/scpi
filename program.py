@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
 
 import connect
 

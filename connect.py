@@ -1,4 +1,6 @@
 # Open a socket connection.
+# Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
+
 import socket
 
 port = 1394

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: ascii -*-
+# Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
 
 import os.path
 import connect
