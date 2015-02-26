@@ -1,39 +1,35 @@
 #!/usr/bin/python
-# -*- coding: ascii -*-
 # Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
 
 import os.path
 import connect
-import traceback
 
-base = 'data'				# Base file name
+base = 'data'       # Base file name
+chan = 4            # Number of channels to read
 
 # Find file name that does not already exist
-seq = 0
-while True :
-    file = '%s-%04d.csv' % (base, seq)
-    if not os.path.exists(file) : break
-    seq += 1
+for n in range(10000) :
+    name = base + '-{0:04d}.csv'.format(n)
+    if not os.path.exists(name) : break
 
-total = 0
-start = 0
-count = 3
 # Save data from Keithley device in a CSV file
+total = 0
 s = connect.connect()
 s.send('format:elements reading, channel, rnumber, tstamp\n')
 s.send('trace:points:actual?\n')
 total = int(s.recv(4096))
-total -= total % count # Truncate to a multiple of count
+total -= total % chan # Truncate to a multiple of chan
 print 'Reading ' + str(total) + ' data points.'
-with open(file, 'wb') as f :
+with open(name, 'wb') as f :
     # Write heading row to file
-    f.write('VDC,TIME,DATE,RDNG,CHAN,')
-    f.write('VDC,TIME,DATE,RDNG,CHAN,')
-    f.write('VDC,TIME,DATE,RDNG,CHAN\n')
-    while start < total :
-        s.send('trace:data:selected? ' + str(start) + ', ' + str(count) + '\n')
+    heading = 'V{0},T{0},D{0},RDNG,CHAN'
+    for n in range(chan) :
+        if (n > 0) : f.write(',')
+        f.write(heading.format(101 + n))
+    f.write('\n')
+    for n in range(0, total, chan) :
+        s.send('trace:data:selected? ' + str(n) + ', ' + str(chan) + '\n')
         f.write(s.recv(4096))
-        start += count
 s.close()
 
-print 'Wrote ' + str(total/count) + ' rows to ' + file
+print 'Wrote ' + str(total/chan) + ' rows to ' + name
