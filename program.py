@@ -1,19 +1,31 @@
 #!/usr/bin/python
 # Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
 
-import connect
+from connect import connect
+from datetime import datetime
 
-commands = 'keithley.txt'   # Name of file with commands
+commandFile = 'keithley.txt' # Name of file with commands
 
-# Load commands from file and send to Keithley device
-s = connect.connect()
-s.send('system:clear\n')		# Clear error queue
-with open(commands, 'rb') as f :
+# Sends a command and prints the error status
+def command(socket, line):
+    line = line.strip()              # Remove extra whitespace
+    if not line             : return # Empty line
+    if line.startswith('%') : return # Comment
+    socket.sendall(line + '\n')
+    print line
+    socket.sendall('system:error?\n')
+    print socket.recv(4096)
+
+s = connect()
+command(s, 'system:clear') # Clear error queue
+
+# Set date and time
+now = datetime.now()
+command(s, 'system:date {0}, {1}, {2}'.format(now.date().year, now.date().month, now.date().day))
+command(s, 'system:time {0}, {1}, {2}'.format(now.time().hour, now.time().minute, now.time().second))
+
+# Load commands from file and send to device
+with open(commandFile, 'rb') as f :
     for line in f :
-        if line[0] == '\n' : continue	# Empty line
-        if line[0] == '%'  : continue	# Comment
-        s.send(line)
-        print line,
-        s.send('system:error?\n')		# Print error queue
-        print s.recv(4096),
+        command(s, line)
 s.close()
