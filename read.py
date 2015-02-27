@@ -15,8 +15,8 @@ for n in range(10000) :
 # Save data from Keithley device in a CSV file
 total = 0
 s = connect.connect()
-s.send('format:elements reading, channel, rnumber, tstamp\n')
-s.send('trace:points:actual?\n')
+s.sendall('format:elements reading, channel, rnumber, tstamp\n')
+s.sendall('trace:points:actual?\n')
 total = int(s.recv(4096))
 total -= total % chan # Truncate to a multiple of chan
 print 'Reading ' + str(total) + ' data points.'
@@ -28,7 +28,7 @@ with open(name, 'wb') as f :
         f.write(heading.format(101 + n))
     f.write('\n')
     for n in range(0, total, chan) :
-        s.send('trace:data:selected? ' + str(n) + ', ' + str(chan) + '\n')
+        s.sendall('trace:data:selected? ' + str(n) + ', ' + str(chan) + '\n')
         f.write(s.recv(4096))
 s.close()
 
