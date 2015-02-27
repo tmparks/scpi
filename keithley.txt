@@ -1,0 +1,16 @@
+% SCPI commands for Keithly 2701
+
+*rst
+trace:clear
+route:open:all
+route:scan (@101:104)
+sense:function 'voltage:dc', (@101:104)
+voltage:dc:nplcycles 10, (@101:104)
+voltage:dc:average:tcontrol repeat
+voltage:dc:average:count 100 ,(@101:104)
+voltage:dc:average:state on ,(@101:104)
+system:tstamp:type rtclock
+initiate:continuous off
+sample:count 25000
+route:scan:lsel int
+initiate:immediate
