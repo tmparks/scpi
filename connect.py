@@ -1,30 +1,39 @@
 # Open a socket connection.
-# Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
+# Copyright 2014-2017 Thomas M. Parks <tmparks@yahoo.com>
 
 import socket
 
 port = 1394
 
 direct = '169.254.1.1'
-colgate = '149.43.56.221'
+campus = '149.43.56.221'
 home = '192.168.1.37'
 
-hosts = (direct, colgate, home)
+hosts = (direct, campus, home)
 
 def connect():
-    isConnected = False
-    for host in hosts:
-        s = socket.socket()
-        s.settimeout(10.0)
-        address = (host, port)
-        try:
+    print 'Connecting from',
+    for (_, _, _, _, (host, _)) in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET) :
+        print host,
+    print
+    s = None
+    error = None
+    for host in hosts :
+        try :
+            s = socket.socket()
+            s.settimeout(5.0)
+            address = (host, port)
             s.connect(address)
-            isConnected = True
             break
         except socket.error as e :
+            print host, e
             error = e
             s.close()
-    if False == isConnected :
+            s = None
+    if s is None :
         print 'Connection failed!'
         raise error
+    (host, _) = s.getpeername()
+    print 'Connected to', host
+    s.settimeout(10.0)
     return s
