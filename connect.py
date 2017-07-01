@@ -12,10 +12,6 @@ home = '192.168.1.37'
 hosts = (direct, campus, home)
 
 def connect():
-    print 'Connecting from',
-    for (_, _, _, _, (host, _)) in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET) :
-        print host,
-    print
     s = None
     error = None
     for host in hosts :
@@ -26,6 +22,8 @@ def connect():
             s.connect(address)
             break
         except socket.error as e :
+            (local, _) = s.getsockname()
+            print 'Error connecting from', local, 'to',
             print host, e
             error = e
             s.close()
