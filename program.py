@@ -11,9 +11,9 @@ def command(socket, line):
     line = line.strip()              # Remove extra whitespace
     if not line             : return # Empty line
     if line.startswith('%') : return # Comment
-    socket.sendall(line + '\n')
+    socket.sendall((line + '\n').encode())
     print(line)
-    socket.sendall('system:error?\n')
+    socket.sendall('system:error?\n'.encode())
     print(socket.recv(4096))
 
 s = connect()
