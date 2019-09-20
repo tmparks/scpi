@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# Copyright 2014-2015 Thomas M. Parks <tmparks@yahoo.com>
+#!/usr/bin/env python3
+# Copyright 2014-2019 Thomas M. Parks <tmparks@yahoo.com>
 
 import os.path
 import connect
