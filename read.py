@@ -19,7 +19,7 @@ s.sendall('format:elements reading, channel, rnumber, tstamp\n')
 s.sendall('trace:points:actual?\n')
 total = int(s.recv(4096))
 total -= total % chan # Truncate to a multiple of chan
-print 'Reading ' + str(total) + ' data points.'
+print('Reading ' + str(total) + ' data points.')
 with open(name, 'wb') as f :
     # Write heading row to file
     heading = 'V{0},T{0},D{0},RDNG,CHAN'
@@ -32,4 +32,4 @@ with open(name, 'wb') as f :
         f.write(s.recv(4096))
 s.close()
 
-print 'Wrote ' + str(total/chan) + ' rows to ' + name
+print('Wrote ' + str(total/chan) + ' rows to ' + name)

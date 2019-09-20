@@ -23,15 +23,14 @@ def connect():
             break
         except socket.error as e :
             (local, _) = s.getsockname()
-            print 'Error connecting from', local, 'to',
-            print name, host , e
+            print('Error connecting from', local, 'to', name, host , e)
             error = e
             s.close()
             s = None
     if s is None :
-        print 'Connection failed!'
+        print('Connection failed!')
         raise error
     (host, _) = s.getpeername()
-    print 'Connected to', host
+    print('Connected to', host)
     s.settimeout(10.0)
     return s

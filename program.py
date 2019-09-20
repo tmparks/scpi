@@ -12,9 +12,9 @@ def command(socket, line):
     if not line             : return # Empty line
     if line.startswith('%') : return # Comment
     socket.sendall(line + '\n')
-    print line
+    print(line)
     socket.sendall('system:error?\n')
-    print socket.recv(4096)
+    print(socket.recv(4096))
 
 s = connect()
 command(s, 'system:clear') # Clear error queue
