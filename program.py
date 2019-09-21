@@ -14,7 +14,9 @@ def command(socket, line):
     socket.sendall((line + '\n').encode())
     print(line)
     socket.sendall('system:error?\n'.encode())
-    print(socket.recv(4096).decode().strip())
+    response= socket.recv(4096).decode().strip()
+    if not response.startswith('0,') :
+        print('Error: ', response)
 
 s = connect()
 command(s, 'system:clear') # Clear error queue
