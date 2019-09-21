@@ -14,7 +14,7 @@ def command(socket, line):
     socket.sendall((line + '\n').encode())
     print(line)
     socket.sendall('system:error?\n'.encode())
-    print(socket.recv(4096))
+    print(socket.recv(4096).decode().strip())
 
 s = connect()
 command(s, 'system:clear') # Clear error queue
@@ -25,7 +25,7 @@ command(s, 'system:date {0}, {1}, {2}'.format(now.date().year, now.date().month,
 command(s, 'system:time {0}, {1}, {2}'.format(now.time().hour, now.time().minute, now.time().second))
 
 # Load commands from file and send to device
-with open(commandFile, 'rb') as f :
+with open(commandFile, 'rt') as f :
     for line in f :
         command(s, line)
 s.close()

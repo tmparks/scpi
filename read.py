@@ -17,10 +17,10 @@ total = 0
 s = connect.connect()
 s.sendall('format:elements reading, channel, rnumber, tstamp\n'.encode())
 s.sendall('trace:points:actual?\n'.encode())
-total = int(s.recv(4096))
+total = int(s.recv(4096).decode())
 total -= total % chan # Truncate to a multiple of chan
 print('Reading ' + str(total) + ' data points.')
-with open(name, 'wb') as f :
+with open(name, 'wt') as f :
     # Write heading row to file
     heading = 'V{0},T{0},D{0},RDNG,CHAN'
     for n in range(chan) :
@@ -29,7 +29,7 @@ with open(name, 'wb') as f :
     f.write('\n')
     for n in range(0, total, chan) :
         s.sendall(('trace:data:selected? ' + str(n) + ', ' + str(chan) + '\n').encode())
-        f.write(s.recv(4096))
+        f.write(s.recv(4096).decode())
 s.close()
 
-print('Wrote ' + str(total/chan) + ' rows to ' + name)
+print('Wrote ' + str(total//chan) + ' rows to ' + name)
